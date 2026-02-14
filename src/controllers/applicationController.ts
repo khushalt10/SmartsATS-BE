@@ -5,6 +5,9 @@ export const getApplications = async (req: Request, res: Response) => {
   try {
     const applications = await prisma.application.findMany({
       orderBy: { dateApplied: 'desc' },
+      include: {
+        resume: true
+      }
     });
     res.json(applications);
   } catch (error) {
@@ -14,7 +17,7 @@ export const getApplications = async (req: Request, res: Response) => {
 
 export const createApplication = async (req: Request, res: Response) => {
   try {
-    const { company, position, status, dateApplied, jobDescription, notes } = req.body;
+    const { company, position, status, dateApplied, jobDescription, notes, resumeId } = req.body;
     const application = await prisma.application.create({
       data: {
         company,
@@ -23,6 +26,7 @@ export const createApplication = async (req: Request, res: Response) => {
         dateApplied: dateApplied ? new Date(dateApplied) : new Date(),
         jobDescription,
         notes,
+        resumeId: resumeId ? Number(resumeId) : undefined,
       },
     });
     res.json(application);

@@ -15,4 +15,16 @@ model Application {
   jobDescription String?
   resumeText     String?
   notes          String?
+  resumeId       Int?
+  resume         Resume? @relation(fields: [resumeId], references: [id])
+}
+
+model Resume {
+  id        Int      @id @default(autoincrement())
+  name      String
+  content   String   // Text content extracted from file
+  filePath  String?  // Path to the stored file (PDF/DOCX)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  applications Application[]
 }
